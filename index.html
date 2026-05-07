@@ -1,0 +1,187 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+#app{width:100%;min-height:620px;position:relative;overflow:hidden;font-family:'DM Sans',sans-serif;background:#0a0a0a}
+
+#modal-wrap{position:absolute;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;min-height:620px}
+#modal-bg{position:absolute;inset:0;background:#0a0a0a}
+#modal-card{position:relative;z-index:2;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);border-radius:20px;padding:44px 48px;text-align:center;width:340px;backdrop-filter:blur(20px)}
+.ascii-small{font-family:monospace;font-size:12px;line-height:1.3;color:rgba(255,255,255,0.5);margin-bottom:20px;white-space:pre;display:block}
+.modal-title{font-size:22px;font-weight:500;color:#fff;margin-bottom:6px;letter-spacing:-0.5px}
+.modal-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:28px}
+#name-input{width:100%;padding:12px 16px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.18);border-radius:10px;font-size:15px;color:#fff;outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.2s}
+#name-input::placeholder{color:rgba(255,255,255,0.3)}
+#name-input:focus{border-color:rgba(255,255,255,0.4)}
+#enter-btn{margin-top:14px;width:100%;padding:13px;background:#fff;color:#0a0a0a;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:opacity 0.15s,transform 0.15s}
+#enter-btn:hover{opacity:0.88;transform:scale(1.01)}
+
+#slide-stage{display:none;position:relative;width:100%;min-height:620px}
+
+.slide{position:absolute;inset:0;min-height:620px;display:flex;align-items:center;justify-content:center;padding:48px;opacity:0;transition:opacity 0s}
+.slide.active{opacity:1;z-index:2}
+.slide.prev{opacity:0;z-index:1}
+
+.slide-bg{position:absolute;inset:0;transition:background 0s}
+.slide-accent{position:absolute;top:0;right:0;width:42%;height:100%;opacity:0.12}
+.slide-stripe{position:absolute;bottom:0;left:0;height:4px;width:100%}
+.slide-dot-grid{position:absolute;inset:0;opacity:0.04;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:28px 28px}
+
+.slide-inner{position:relative;z-index:5;width:100%;max-width:540px;color:#fff}
+.lang-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.18);border-radius:100px;font-size:12px;letter-spacing:0.8px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:24px}
+.flag-big{font-size:22px;line-height:1}
+.welcome-word{font-family:'DM Serif Display',serif;font-size:64px;font-weight:400;line-height:1.05;letter-spacing:-2px;color:#fff;margin-bottom:6px;white-space:nowrap}
+.name-line{font-size:26px;font-weight:300;color:rgba(255,255,255,0.75);letter-spacing:-0.5px;margin-bottom:32px}
+.divider{width:40px;height:1px;background:rgba(255,255,255,0.25);margin-bottom:28px}
+.emoji-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}
+.emoji-chip{padding:7px 14px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.14);border-radius:100px;font-size:18px;line-height:1}
+.ascii-side{font-family:monospace;font-size:10.5px;line-height:1.35;color:rgba(255,255,255,0.25);white-space:pre;position:absolute;right:48px;bottom:48px;z-index:5;text-align:right}
+
+.prog-bar{position:absolute;bottom:0;left:0;height:3px;z-index:10;transition:width 0.05s linear}
+
+.bubble{position:absolute;pointer-events:none;animation:rise linear forwards;z-index:6;font-size:20px;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))}
+@keyframes rise{0%{transform:translateY(0) scale(0.4);opacity:0}8%{opacity:0.85;transform:translateY(-30px) scale(1)}85%{opacity:0.7}100%{transform:translateY(-480px) scale(0.7);opacity:0}}
+
+.slide-num{position:absolute;top:28px;right:32px;z-index:10;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.3)}
+
+@keyframes slideInRight{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideInLeft{from{transform:translateX(-60px);opacity:0}to{transform:translateX(0);opacity:1}}
+.slide-enter{animation:slideInRight 0.55s cubic-bezier(0.22,1,0.36,1) both}
+.slide-exit{animation:slideInLeft 0.55s cubic-bezier(0.22,1,0.36,1) both;opacity:0!important}
+</style>
+
+<div id="app">
+  <div id="modal-wrap">
+    <div id="modal-bg"></div>
+    <div id="modal-card">
+      <span class="ascii-small">  (\ /)
+ ( . .)
+ c(")(")
+  bunny</span>
+      <p class="modal-title">Olá, mundo!</p>
+      <p class="modal-sub">Como posso te chamar?</p>
+      <input id="name-input" type="text" placeholder="Seu nome..." maxlength="28"/>
+      <button id="enter-btn">Entrar →</button>
+    </div>
+  </div>
+
+  <div id="slide-stage"></div>
+</div>
+
+<script>
+const DATA=[
+  {lang:"Português",code:"PT",flag:"🇧🇷",word:"Bem-vindo",bg:"#0a2e0f",accent:"#00c853",stripe:"#009c3b",emojis:["😱","☕","🌴","⚽","🦜","🥭"]},
+  {lang:"English",code:"EN",flag:"🇺🇸",word:"Welcome",bg:"#0d1b3e",accent:"#4a90e2",stripe:"#b22234",emojis:["🗽","🍔","🦅","🎸","🏈","⭐"]},
+  {lang:"Español",code:"ES",flag:"🇪🇸",word:"Bienvenido",bg:"#2d0a0a",accent:"#f1bf00",stripe:"#c60b1e",emojis:["💃","🥘","⚽","🎭","🌹","🍷"]},
+  {lang:"Français",code:"FR",flag:"🇫🇷",word:"Bienvenue",bg:"#060d2e",accent:"#ed2939",stripe:"#002395",emojis:["🥐","🗼","🍷","🧀","🎨","💋"]},
+  {lang:"Deutsch",code:"DE",flag:"🇩🇪",word:"Willkommen",bg:"#111111",accent:"#ffce00",stripe:"#dd0000",emojis:["🍺","🥨","🏰","🚗","⚙️","🎻"]},
+  {lang:"日本語",code:"JP",flag:"🇯🇵",word:"ようこそ",bg:"#1a0008",accent:"#bc002d",stripe:"#bc002d",emojis:["🌸","🍱","🏯","🎎","🍜","⛩️"]},
+  {lang:"Italiano",code:"IT",flag:"🇮🇹",word:"Benvenuto",bg:"#071a0e",accent:"#ce2b37",stripe:"#009246",emojis:["🍕","🍝","🏛️","🤌","🍷","⛵"]},
+  {lang:"中文",code:"CN",flag:"🇨🇳",word:"欢迎",bg:"#200004",accent:"#ffde00",stripe:"#de2910",emojis:["🐉","🎆","🥟","🏮","🐼","🧧"]},
+  {lang:"한국어",code:"KR",flag:"🇰🇷",word:"환영합니다",bg:"#080e24",accent:"#cd2e3a",stripe:"#003478",emojis:["🎎","🍜","🌸","🎮","🎵","🥢"]},
+  {lang:"हिन्दी",code:"IN",flag:"🇮🇳",word:"स्वागत",bg:"#1a0d00",accent:"#138808",stripe:"#ff9933",emojis:["🐘","🌺","🎆","🏯","🍛","🐯"]},
+  {lang:"Türkçe",code:"TR",flag:"🇹🇷",word:"Hoş geldiniz",bg:"#1a0005",accent:"#e30a17",stripe:"#e30a17",emojis:["🌙","⭐","🕌","☕","🌹","🌊"]},
+  {lang:"Swahili",code:"KE",flag:"🇰🇪",word:"Karibu",bg:"#001a00",accent:"#bb0000",stripe:"#006600",emojis:["🦁","🐘","🌍","🦒","🌴","🐆"]},
+];
+
+const DURATION=4200;
+let userName="",idx=0,timer=null,prog=null,elapsed=0,progStart=0,bubTimer=null;
+
+const nameInput=document.getElementById("name-input");
+const enterBtn=document.getElementById("enter-btn");
+const stage=document.getElementById("slide-stage");
+
+function buildSlide(d,name){
+  const s=document.createElement("div");
+  s.className="slide";
+  s.innerHTML=`
+    <div class="slide-bg" style="background:${d.bg}"></div>
+    <div class="slide-dot-grid"></div>
+    <div class="slide-accent" style="background:${d.accent}"></div>
+    <div class="slide-stripe" style="background:${d.stripe}"></div>
+    <div class="slide-num">${String(DATA.indexOf(d)+1).padStart(2,"0")} / ${String(DATA.length).padStart(2,"0")}</div>
+    <div class="slide-inner">
+      <div class="lang-pill"><span class="flag-big">${d.flag}</span>${d.lang} · ${d.code}</div>
+      <div class="welcome-word">${d.word},</div>
+      <div class="name-line">${name}.</div>
+      <div class="divider"></div>
+      <div class="emoji-row">${d.emojis.map(e=>`<span class="emoji-chip">${e}</span>`).join("")}</div>
+    </div>
+    <pre class="ascii-side">  (\\ /)
+ ( . .)
+ c(")(")
+  bunny</pre>
+    <div class="prog-bar" style="background:${d.accent}"></div>
+  `;
+  return s;
+}
+
+function startProgress(bar){
+  progStart=Date.now();
+  function tick(){
+    elapsed=Date.now()-progStart;
+    const pct=Math.min((elapsed/DURATION)*100,100);
+    bar.style.width=pct+"%";
+    if(pct<100) prog=requestAnimationFrame(tick);
+  }
+  prog=requestAnimationFrame(tick);
+}
+
+function spawnBubbles(slide,d){
+  let count=0;
+  function drop(){
+    if(count>22)return;
+    const el=document.createElement("div");
+    el.className="bubble";
+    el.textContent=d.emojis[Math.floor(Math.random()*d.emojis.length)];
+    el.style.left=(5+Math.random()*88)+"%";
+    el.style.bottom=(20+Math.random()*60)+"px";
+    const dur=3.2+Math.random()*2.8;
+    el.style.animationDuration=dur+"s";
+    el.style.fontSize=(16+Math.random()*16)+"px";
+    slide.appendChild(el);
+    el.addEventListener("animationend",()=>el.remove());
+    count++;
+    bubTimer=setTimeout(drop,320+Math.random()*400);
+  }
+  drop();
+}
+
+function goTo(newIdx,name){
+  if(prog) cancelAnimationFrame(prog);
+  if(timer) clearTimeout(timer);
+  if(bubTimer) clearTimeout(bubTimer);
+
+  const prev=stage.querySelector(".slide.active");
+  const d=DATA[newIdx];
+  const slide=buildSlide(d,name);
+  stage.appendChild(slide);
+
+  if(prev){
+    prev.classList.remove("active");
+    prev.classList.add("prev");
+    setTimeout(()=>prev.remove(),600);
+  }
+  slide.classList.add("active","slide-enter");
+  setTimeout(()=>slide.classList.remove("slide-enter"),600);
+
+  const bar=slide.querySelector(".prog-bar");
+  startProgress(bar);
+  spawnBubbles(slide,d);
+
+  timer=setTimeout(()=>{
+    idx=(newIdx+1)%DATA.length;
+    goTo(idx,name);
+  },DURATION);
+}
+
+function launch(){
+  userName=nameInput.value.trim()||"Visitante";
+  document.getElementById("modal-wrap").style.display="none";
+  stage.style.display="block";
+  goTo(0,userName);
+}
+
+enterBtn.addEventListener("click",launch);
+nameInput.addEventListener("keydown",e=>{ if(e.key==="Enter") launch(); });
+</script>
