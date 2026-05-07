@@ -1,187 +1,2452 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESTOICISMO — Controla o que é teu. O resto, solta.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
-*{margin:0;padding:0;box-sizing:border-box}
-#app{width:100%;min-height:620px;position:relative;overflow:hidden;font-family:'DM Sans',sans-serif;background:#0a0a0a}
+  :root {
+    --bg: #0a0805;
+    --bg2: #110e09;
+    --paper: #f5efe3;
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --rust: #8b3a1a;
+    --stone: #6b6055;
+    --ash: #2a2420;
+    --cream: #ede5d4;
+    --white: #faf7f2;
+    --red: #8c1f1f;
+  }
 
-#modal-wrap{position:absolute;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;min-height:620px}
-#modal-bg{position:absolute;inset:0;background:#0a0a0a}
-#modal-card{position:relative;z-index:2;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);border-radius:20px;padding:44px 48px;text-align:center;width:340px;backdrop-filter:blur(20px)}
-.ascii-small{font-family:monospace;font-size:12px;line-height:1.3;color:rgba(255,255,255,0.5);margin-bottom:20px;white-space:pre;display:block}
-.modal-title{font-size:22px;font-weight:500;color:#fff;margin-bottom:6px;letter-spacing:-0.5px}
-.modal-sub{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:28px}
-#name-input{width:100%;padding:12px 16px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.18);border-radius:10px;font-size:15px;color:#fff;outline:none;font-family:'DM Sans',sans-serif;transition:border-color 0.2s}
-#name-input::placeholder{color:rgba(255,255,255,0.3)}
-#name-input:focus{border-color:rgba(255,255,255,0.4)}
-#enter-btn{margin-top:14px;width:100%;padding:13px;background:#fff;color:#0a0a0a;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;transition:opacity 0.15s,transform 0.15s}
-#enter-btn:hover{opacity:0.88;transform:scale(1.01)}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-#slide-stage{display:none;position:relative;width:100%;min-height:620px}
+  html { scroll-behavior: smooth; }
 
-.slide{position:absolute;inset:0;min-height:620px;display:flex;align-items:center;justify-content:center;padding:48px;opacity:0;transition:opacity 0s}
-.slide.active{opacity:1;z-index:2}
-.slide.prev{opacity:0;z-index:1}
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
 
-.slide-bg{position:absolute;inset:0;transition:background 0s}
-.slide-accent{position:absolute;top:0;right:0;width:42%;height:100%;opacity:0.12}
-.slide-stripe{position:absolute;bottom:0;left:0;height:4px;width:100%}
-.slide-dot-grid{position:absolute;inset:0;opacity:0.04;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:28px 28px}
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, width 0.3s, height 0.3s, opacity 0.3s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+    opacity: 0.5;
+  }
 
-.slide-inner{position:relative;z-index:5;width:100%;max-width:540px;color:#fff}
-.lang-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.18);border-radius:100px;font-size:12px;letter-spacing:0.8px;color:rgba(255,255,255,0.7);text-transform:uppercase;margin-bottom:24px}
-.flag-big{font-size:22px;line-height:1}
-.welcome-word{font-family:'DM Serif Display',serif;font-size:64px;font-weight:400;line-height:1.05;letter-spacing:-2px;color:#fff;margin-bottom:6px;white-space:nowrap}
-.name-line{font-size:26px;font-weight:300;color:rgba(255,255,255,0.75);letter-spacing:-0.5px;margin-bottom:32px}
-.divider{width:40px;height:1px;background:rgba(255,255,255,0.25);margin-bottom:28px}
-.emoji-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:36px}
-.emoji-chip{padding:7px 14px;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.14);border-radius:100px;font-size:18px;line-height:1}
-.ascii-side{font-family:monospace;font-size:10.5px;line-height:1.35;color:rgba(255,255,255,0.25);white-space:pre;position:absolute;right:48px;bottom:48px;z-index:5;text-align:right}
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
 
-.prog-bar{position:absolute;bottom:0;left:0;height:3px;z-index:10;transition:width 0.05s linear}
+  /* SCROLL INDICATOR */
+  .scroll-indicator {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--rust), var(--gold));
+    z-index: 9998;
+    width: 0%;
+    transition: width 0.1s;
+  }
 
-.bubble{position:absolute;pointer-events:none;animation:rise linear forwards;z-index:6;font-size:20px;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))}
-@keyframes rise{0%{transform:translateY(0) scale(0.4);opacity:0}8%{opacity:0.85;transform:translateY(-30px) scale(1)}85%{opacity:0.7}100%{transform:translateY(-480px) scale(0.7);opacity:0}}
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 40px;
+    text-align: center;
+  }
 
-.slide-num{position:absolute;top:28px;right:32px;z-index:10;font-size:11px;letter-spacing:1px;color:rgba(255,255,255,0.3)}
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, #1a1208 0%, #0a0805 70%);
+  }
 
-@keyframes slideInRight{from{transform:translateX(60px);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes slideInLeft{from{transform:translateX(-60px);opacity:0}to{transform:translateX(0);opacity:1}}
-.slide-enter{animation:slideInRight 0.55s cubic-bezier(0.22,1,0.36,1) both}
-.slide-exit{animation:slideInLeft 0.55s cubic-bezier(0.22,1,0.36,1) both;opacity:0!important}
+  .hero-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(201,168,76,0.04) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(201,168,76,0.04) 60px);
+  }
+
+  .hero-circle {
+    position: absolute;
+    width: 600px; height: 600px;
+    border: 1px solid rgba(201,168,76,0.08);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: slowRotate 60s linear infinite;
+  }
+  .hero-circle::before {
+    content: '';
+    position: absolute;
+    inset: 40px;
+    border: 1px solid rgba(201,168,76,0.06);
+    border-radius: 50%;
+    animation: slowRotate 40s linear infinite reverse;
+  }
+  .hero-circle::after {
+    content: '';
+    position: absolute;
+    inset: 100px;
+    border: 1px solid rgba(201,168,76,0.04);
+    border-radius: 50%;
+  }
+
+  @keyframes slowRotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    opacity: 0.7;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 15vw, 14rem);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    animation: fadeUp 1s 0.2s ease both;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-title span {
+    display: block;
+    color: var(--gold);
+    font-size: 0.55em;
+    letter-spacing: 0.05em;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    color: var(--stone);
+    margin-top: 32px;
+    max-width: 600px;
+    line-height: 1.6;
+    animation: fadeUp 1s 0.4s ease both;
+    z-index: 1;
+    position: relative;
+  }
+
+  .hero-quote {
+    margin-top: 60px;
+    padding: 28px 40px;
+    border-left: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--cream);
+    max-width: 700px;
+    animation: fadeUp 1s 0.6s ease both;
+    position: relative;
+    z-index: 1;
+    background: rgba(201,168,76,0.04);
+  }
+
+  .hero-quote cite {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    margin-top: 12px;
+    font-style: normal;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--stone);
+    animation: fadeUp 1s 1s ease both;
+  }
+
+  .hero-scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.1); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 20px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, rgba(10,8,5,0.95), transparent);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--stone);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--gold);
+    transition: width 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ===== SECTIONS ===== */
+  section {
+    padding: 120px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    opacity: 0.6;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 40px;
+  }
+
+  .section-title em {
+    color: var(--gold);
+    font-style: italic;
+  }
+
+  /* ===== DIVIDER ===== */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    opacity: 0.2;
+    margin: 0;
+  }
+
+  /* ===== THE DICOTOMY ===== */
+  .dichotomy {
+    background: var(--bg2);
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dichotomy::before {
+    content: 'CONTROLE';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20vw;
+    color: rgba(201,168,76,0.03);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.1em;
+  }
+
+  .dichotomy-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .dichotomy-grid {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 0;
+    margin-top: 80px;
+    align-items: start;
+  }
+
+  .dichotomy-col {
+    padding: 60px 40px;
+    position: relative;
+  }
+
+  .dichotomy-col.yours {
+    background: rgba(201,168,76,0.05);
+    border: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .dichotomy-col.notYours {
+    background: rgba(139,58,26,0.05);
+    border: 1px solid rgba(139,58,26,0.15);
+  }
+
+  .dichotomy-col-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 30px;
+  }
+
+  .yours .dichotomy-col-title { color: var(--gold); }
+  .notYours .dichotomy-col-title { color: var(--rust); }
+
+  .dichotomy-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .dichotomy-divider::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--stone), transparent);
+  }
+
+  .dichotomy-divider span {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--stone);
+    background: var(--bg2);
+    padding: 10px 0;
+    position: relative;
+    z-index: 1;
+    writing-mode: vertical-rl;
+    letter-spacing: 0.1em;
+  }
+
+  .dichotomy-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dichotomy-list li {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    padding-left: 24px;
+    position: relative;
+    color: var(--cream);
+    opacity: 0.85;
+  }
+
+  .dichotomy-list li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  .yours .dichotomy-list li::before { color: var(--gold); }
+  .notYours .dichotomy-list li::before { color: var(--rust); opacity: 0.7; }
+
+  /* ===== PHILOSOPHERS SECTION ===== */
+  .philosophers {
+    background: var(--bg);
+  }
+
+  .philosophers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+  }
+
+  .philosopher-card {
+    padding: 60px 40px;
+    background: var(--bg2);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: none;
+  }
+
+  .philosopher-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .philosopher-card:hover::before { opacity: 1; }
+  .philosopher-card:hover { background: #13100a; }
+
+  .philosopher-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: rgba(201,168,76,0.08);
+    position: absolute;
+    top: 20px; right: 30px;
+    line-height: 1;
+  }
+
+  .philosopher-era {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 16px;
+  }
+
+  .philosopher-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .philosopher-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--stone);
+    margin-bottom: 30px;
+  }
+
+  .philosopher-bio {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--stone);
+    margin-bottom: 30px;
+  }
+
+  .philosopher-quote {
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--cream);
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding-top: 24px;
+    line-height: 1.6;
+  }
+
+  /* ===== QUOTE SECTION ===== */
+  .quote-section {
+    background: var(--bg2);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quote-section-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 60px;
+  }
+
+  .quotes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 80px;
+  }
+
+  .quote-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 40px;
+    padding: 60px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.08);
+    align-items: start;
+    transition: background 0.3s;
+  }
+
+  .quote-item:hover { background: rgba(201,168,76,0.02); }
+
+  .quote-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: rgba(201,168,76,0.15);
+    line-height: 1;
+    padding-top: 8px;
+  }
+
+  .quote-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1.3rem, 2.5vw, 2rem);
+    line-height: 1.4;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .quote-author {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.7;
+  }
+
+  .quote-translation {
+    font-size: 0.95rem;
+    color: var(--stone);
+    margin-top: 12px;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* ===== PRINCIPLES ===== */
+  .principles {
+    background: var(--bg);
+    position: relative;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+  }
+
+  .principle-item {
+    padding: 60px 50px;
+    background: var(--bg2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .principle-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(to right, var(--gold), var(--rust));
+    transition: width 0.6s ease;
+  }
+
+  .principle-item:hover::after { width: 100%; }
+
+  .principle-icon {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .principle-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.5;
+    margin-bottom: 16px;
+  }
+
+  .principle-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 20px;
+  }
+
+  .principle-body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--stone);
+  }
+
+  /* ===== SCHOOLS ===== */
+  .schools {
+    background: var(--bg2);
+    padding: 120px 0;
+    position: relative;
+  }
+
+  .schools-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .schools-timeline {
+    position: relative;
+    margin-top: 80px;
+    padding-left: 60px;
+  }
+
+  .schools-timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    opacity: 0.3;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 80px;
+    padding-left: 40px;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -48px;
+    top: 8px;
+    width: 16px; height: 16px;
+    border: 2px solid var(--gold);
+    background: var(--bg2);
+    border-radius: 50%;
+    transition: background 0.3s;
+  }
+
+  .timeline-item:hover .timeline-dot { background: var(--gold); }
+
+  .timeline-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  .timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  .timeline-body {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--stone);
+    max-width: 700px;
+  }
+
+  /* ===== MEMENTO MORI ===== */
+  .memento {
+    background: #080604;
+    padding: 160px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .memento::before {
+    content: 'MEMENTO MORI';
+    position: absolute;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18vw;
+    color: rgba(139,58,26,0.04);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    letter-spacing: 0.1em;
+    pointer-events: none;
+  }
+
+  .memento-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .memento-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 8rem);
+    color: var(--white);
+    letter-spacing: 0.1em;
+    line-height: 0.9;
+  }
+
+  .memento-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--rust);
+    margin: 24px 0 60px;
+    letter-spacing: 0.1em;
+  }
+
+  .memento-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--stone);
+    text-align: left;
+    columns: 2;
+    column-gap: 60px;
+  }
+
+  /* ===== VIRTUES ===== */
+  .virtues {
+    background: var(--bg);
+    position: relative;
+  }
+
+  .virtues-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+  }
+
+  .virtue-card {
+    padding: 50px 30px;
+    background: var(--bg2);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+
+  .virtue-card:hover { transform: translateY(-4px); }
+
+  .virtue-greek {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    color: rgba(201,168,76,0.12);
+    font-style: italic;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .virtue-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .virtue-pt {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--stone);
+    margin-bottom: 20px;
+  }
+
+  .virtue-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--stone);
+  }
+
+  /* ===== COMPARISON ===== */
+  .comparison {
+    background: var(--bg2);
+    padding: 120px 0;
+  }
+
+  .comparison-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 80px;
+  }
+
+  .comparison-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    padding: 20px 30px;
+    text-align: left;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .comparison-table td {
+    padding: 20px 30px;
+    font-size: 0.95rem;
+    color: var(--stone);
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    line-height: 1.6;
+  }
+
+  .comparison-table tr:hover td { background: rgba(201,168,76,0.02); color: var(--cream); }
+
+  .comparison-table .td-category {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--cream);
+    font-weight: 600;
+  }
+
+  .comparison-table .td-stoic { color: var(--gold); }
+  .comparison-table .td-other { color: var(--rust); opacity: 0.7; }
+
+  /* ===== PRACTICES ===== */
+  .practices {
+    background: var(--bg);
+  }
+
+  .practices-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 80px;
+  }
+
+  .practice-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 60px;
+    padding: 60px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+    align-items: start;
+    transition: padding 0.3s;
+  }
+
+  .practice-item:hover { padding-left: 20px; }
+
+  .practice-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.3;
+  }
+
+  .practice-latin {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--gold);
+    opacity: 0.7;
+    margin-top: 4px;
+  }
+
+  .practice-content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--stone);
+  }
+
+  /* ===== MODERN SECTION ===== */
+  .modern {
+    background: var(--bg2);
+    padding: 120px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .modern-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .modern-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 80px;
+    align-items: center;
+  }
+
+  .modern-text {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--stone);
+  }
+
+  .modern-text p + p { margin-top: 24px; }
+
+  .modern-highlight {
+    padding: 40px;
+    background: rgba(201,168,76,0.05);
+    border-left: 3px solid var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--cream);
+    line-height: 1.6;
+    margin-top: 40px;
+  }
+
+  .modern-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .stat-item {
+    padding: 50px 40px;
+    background: var(--bg);
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--stone);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ===== READING LIST ===== */
+  .reading {
+    background: var(--bg);
+  }
+
+  .books-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 80px;
+  }
+
+  .book-item {
+    padding: 50px 40px;
+    background: var(--bg2);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+
+  .book-item:hover { background: #13100a; }
+
+  .book-cover {
+    width: 60px; height: 80px;
+    background: var(--ash);
+    margin-bottom: 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .book-cover::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--gold);
+    opacity: 0.5;
+  }
+
+  .book-cover span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    writing-mode: vertical-rl;
+    padding-left: 10px;
+    opacity: 0.5;
+  }
+
+  .book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .book-author {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    opacity: 0.6;
+    margin-bottom: 20px;
+  }
+
+  .book-desc {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--stone);
+  }
+
+  /* ===== INTERACTIVE CHECKLIST ===== */
+  .checklist-section {
+    background: var(--bg2);
+    padding: 120px 0;
+  }
+
+  .checklist-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 80px;
+  }
+
+  .checklist-col-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--white);
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+
+  .checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    font-size: 0.95rem;
+    color: var(--stone);
+    line-height: 1.5;
+    cursor: none;
+    transition: color 0.3s;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.04);
+  }
+
+  .checklist li:hover { color: var(--cream); }
+
+  .check-box {
+    width: 20px; height: 20px;
+    border: 1px solid rgba(201,168,76,0.3);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+  }
+
+  .checklist li.checked .check-box {
+    background: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .check-box::after {
+    content: '✓';
+    font-size: 0.7rem;
+    color: var(--bg);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .checklist li.checked .check-box::after { opacity: 1; }
+
+  /* ===== FINAL CTA ===== */
+  .final {
+    background: var(--bg);
+    padding: 160px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-bg {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(201,168,76,0.06), transparent);
+  }
+
+  .final-inner {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .final-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    color: var(--white);
+    letter-spacing: 0.05em;
+    line-height: 0.95;
+    margin-bottom: 40px;
+  }
+
+  .final-title span {
+    display: block;
+    color: var(--gold);
+  }
+
+  .final-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: var(--stone);
+    line-height: 1.7;
+    margin-bottom: 60px;
+  }
+
+  .final-mantra {
+    display: inline-block;
+    padding: 20px 50px;
+    border: 1px solid rgba(201,168,76,0.3);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.35em;
+    color: var(--gold);
+    text-transform: uppercase;
+    position: relative;
+    transition: all 0.3s;
+  }
+
+  .final-mantra:hover {
+    background: rgba(201,168,76,0.08);
+    border-color: var(--gold);
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: var(--bg2);
+    padding: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(201,168,76,0.08);
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+  }
+
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--stone);
+    opacity: 0.4;
+    text-align: center;
+  }
+
+  /* ===== REVEAL ANIMATIONS ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* ===== FLOATING QUOTE ===== */
+  .floating-quote {
+    position: fixed;
+    bottom: 40px; right: 40px;
+    max-width: 300px;
+    padding: 20px 24px;
+    background: rgba(17,14,9,0.95);
+    border-left: 2px solid var(--gold);
+    backdrop-filter: blur(12px);
+    z-index: 500;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+    pointer-events: none;
+  }
+
+  .floating-quote.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .floating-quote p {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--cream);
+    line-height: 1.5;
+  }
+
+  .floating-quote cite {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    opacity: 0.7;
+    display: block;
+    margin-top: 8px;
+    font-style: normal;
+  }
+
+  /* ===== WIDE TEXT ===== */
+  .wide-text {
+    padding: 80px 0;
+    overflow: hidden;
+    background: var(--bg);
+    border-top: 1px solid rgba(201,168,76,0.06);
+    border-bottom: 1px solid rgba(201,168,76,0.06);
+  }
+
+  .wide-text-inner {
+    display: flex;
+    animation: marquee 30s linear infinite;
+    white-space: nowrap;
+  }
+
+  .wide-text-inner span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    color: rgba(201,168,76,0.12);
+    padding: 0 60px;
+    letter-spacing: 0.1em;
+  }
+
+  .wide-text-inner span em {
+    color: rgba(201,168,76,0.25);
+    font-style: normal;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    nav { padding: 20px 30px; }
+    .nav-links { display: none; }
+    section { padding: 80px 30px; }
+    .dichotomy-grid { grid-template-columns: 1fr; }
+    .dichotomy-divider { display: none; }
+    .philosophers-grid { grid-template-columns: 1fr; }
+    .principles-grid { grid-template-columns: 1fr; }
+    .virtues-grid { grid-template-columns: 1fr 1fr; }
+    .books-grid { grid-template-columns: 1fr; }
+    .checklist-grid { grid-template-columns: 1fr; }
+    .modern-grid { grid-template-columns: 1fr; }
+    .comparison-table { font-size: 0.85rem; }
+    .memento-text { columns: 1; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    .practice-item { grid-template-columns: 1fr; gap: 20px; }
+    .modern-stats { grid-template-columns: 1fr 1fr; }
+  }
 </style>
+</head>
+<body>
 
-<div id="app">
-  <div id="modal-wrap">
-    <div id="modal-bg"></div>
-    <div id="modal-card">
-      <span class="ascii-small">  (\ /)
- ( . .)
- c(")(")
-  bunny</span>
-      <p class="modal-title">Olá, mundo!</p>
-      <p class="modal-sub">Como posso te chamar?</p>
-      <input id="name-input" type="text" placeholder="Seu nome..." maxlength="28"/>
-      <button id="enter-btn">Entrar →</button>
-    </div>
-  </div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scroll-indicator" id="scrollIndicator"></div>
 
-  <div id="slide-stage"></div>
+<!-- FLOATING QUOTE -->
+<div class="floating-quote" id="floatingQuote">
+  <p id="floatingText"></p>
+  <cite id="floatingCite"></cite>
 </div>
 
-<script>
-const DATA=[
-  {lang:"Português",code:"PT",flag:"🇧🇷",word:"Bem-vindo",bg:"#0a2e0f",accent:"#00c853",stripe:"#009c3b",emojis:["😱","☕","🌴","⚽","🦜","🥭"]},
-  {lang:"English",code:"EN",flag:"🇺🇸",word:"Welcome",bg:"#0d1b3e",accent:"#4a90e2",stripe:"#b22234",emojis:["🗽","🍔","🦅","🎸","🏈","⭐"]},
-  {lang:"Español",code:"ES",flag:"🇪🇸",word:"Bienvenido",bg:"#2d0a0a",accent:"#f1bf00",stripe:"#c60b1e",emojis:["💃","🥘","⚽","🎭","🌹","🍷"]},
-  {lang:"Français",code:"FR",flag:"🇫🇷",word:"Bienvenue",bg:"#060d2e",accent:"#ed2939",stripe:"#002395",emojis:["🥐","🗼","🍷","🧀","🎨","💋"]},
-  {lang:"Deutsch",code:"DE",flag:"🇩🇪",word:"Willkommen",bg:"#111111",accent:"#ffce00",stripe:"#dd0000",emojis:["🍺","🥨","🏰","🚗","⚙️","🎻"]},
-  {lang:"日本語",code:"JP",flag:"🇯🇵",word:"ようこそ",bg:"#1a0008",accent:"#bc002d",stripe:"#bc002d",emojis:["🌸","🍱","🏯","🎎","🍜","⛩️"]},
-  {lang:"Italiano",code:"IT",flag:"🇮🇹",word:"Benvenuto",bg:"#071a0e",accent:"#ce2b37",stripe:"#009246",emojis:["🍕","🍝","🏛️","🤌","🍷","⛵"]},
-  {lang:"中文",code:"CN",flag:"🇨🇳",word:"欢迎",bg:"#200004",accent:"#ffde00",stripe:"#de2910",emojis:["🐉","🎆","🥟","🏮","🐼","🧧"]},
-  {lang:"한국어",code:"KR",flag:"🇰🇷",word:"환영합니다",bg:"#080e24",accent:"#cd2e3a",stripe:"#003478",emojis:["🎎","🍜","🌸","🎮","🎵","🥢"]},
-  {lang:"हिन्दी",code:"IN",flag:"🇮🇳",word:"स्वागत",bg:"#1a0d00",accent:"#138808",stripe:"#ff9933",emojis:["🐘","🌺","🎆","🏯","🍛","🐯"]},
-  {lang:"Türkçe",code:"TR",flag:"🇹🇷",word:"Hoş geldiniz",bg:"#1a0005",accent:"#e30a17",stripe:"#e30a17",emojis:["🌙","⭐","🕌","☕","🌹","🌊"]},
-  {lang:"Swahili",code:"KE",flag:"🇰🇪",word:"Karibu",bg:"#001a00",accent:"#bb0000",stripe:"#006600",emojis:["🦁","🐘","🌍","🦒","🌴","🐆"]},
-];
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">STOICUS</div>
+  <ul class="nav-links">
+    <li><a href="#dicotomia">Dicotomia</a></li>
+    <li><a href="#filosofos">Filósofos</a></li>
+    <li><a href="#virtudes">Virtudes</a></li>
+    <li><a href="#praticas">Práticas</a></li>
+    <li><a href="#moderno">Hoje</a></li>
+  </ul>
+</nav>
 
-const DURATION=4200;
-let userName="",idx=0,timer=null,prog=null,elapsed=0,progStart=0,bubTimer=null;
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-circle"></div>
 
-const nameInput=document.getElementById("name-input");
-const enterBtn=document.getElementById("enter-btn");
-const stage=document.getElementById("slide-stage");
+  <p class="hero-tag">Filosofia Grega · Séc. III a.C. · Zênon de Cítio</p>
 
-function buildSlide(d,name){
-  const s=document.createElement("div");
-  s.className="slide";
-  s.innerHTML=`
-    <div class="slide-bg" style="background:${d.bg}"></div>
-    <div class="slide-dot-grid"></div>
-    <div class="slide-accent" style="background:${d.accent}"></div>
-    <div class="slide-stripe" style="background:${d.stripe}"></div>
-    <div class="slide-num">${String(DATA.indexOf(d)+1).padStart(2,"0")} / ${String(DATA.length).padStart(2,"0")}</div>
-    <div class="slide-inner">
-      <div class="lang-pill"><span class="flag-big">${d.flag}</span>${d.lang} · ${d.code}</div>
-      <div class="welcome-word">${d.word},</div>
-      <div class="name-line">${name}.</div>
-      <div class="divider"></div>
-      <div class="emoji-row">${d.emojis.map(e=>`<span class="emoji-chip">${e}</span>`).join("")}</div>
+  <h1 class="hero-title">
+    ESTOI
+    <span>CISMO</span>
+  </h1>
+
+  <p class="hero-subtitle">
+    A arte de viver com virtude, razão e equanimidade —
+    dominando o que é seu, liberando o que não é.
+  </p>
+
+  <blockquote class="hero-quote">
+    "Controla o que é teu. O resto, solta."
+    <cite>— Filosofia Estoica, adaptado</cite>
+  </blockquote>
+
+  <div class="hero-scroll">
+    <span>ROLAR</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</header>
+
+<!-- MARQUEE -->
+<div class="wide-text">
+  <div class="wide-text-inner">
+    <span>VIRTUDE · <em>RAZÃO</em> · EQUANIMIDADE · <em>CONTROLE</em> · SABEDORIA · <em>CORAGEM</em> · JUSTIÇA · <em>TEMPERANÇA</em> · LOGOS · <em>AMOR FATI</em> · MEMENTO MORI · <em>DICOTOMIA</em> ·</span>
+    <span>VIRTUDE · <em>RAZÃO</em> · EQUANIMIDADE · <em>CONTROLE</em> · SABEDORIA · <em>CORAGEM</em> · JUSTIÇA · <em>TEMPERANÇA</em> · LOGOS · <em>AMOR FATI</em> · MEMENTO MORI · <em>DICOTOMIA</em> ·</span>
+  </div>
+</div>
+
+<!-- DICHOTOMY -->
+<div class="dichotomy" id="dicotomia">
+  <div class="dichotomy-inner">
+    <p class="section-label reveal">01 — Fundamento</p>
+    <h2 class="section-title reveal">A <em>Dicotomia</em> do Controle</h2>
+    <p style="max-width:600px; color:var(--stone); font-size:1.05rem; line-height:1.8;" class="reveal">
+      O conceito mais poderoso do Estoicismo: algumas coisas dependem de você,
+      outras não. Essa separação não é resignação — é <em style="color:var(--cream)">libertação</em>.
+      Epicteto ensinou isso como o alicerce de toda sabedoria prática.
+    </p>
+
+    <div class="dichotomy-grid reveal">
+      <div class="dichotomy-col yours">
+        <div class="dichotomy-col-title">✦ O QUE É SEU</div>
+        <ul class="dichotomy-list">
+          <li>Seus julgamentos e opiniões</li>
+          <li>Seus desejos e aversões</li>
+          <li>Suas escolhas e ações</li>
+          <li>Seu caráter e valores</li>
+          <li>Como você interpreta os eventos</li>
+          <li>O esforço que você coloca</li>
+          <li>Sua resposta emocional</li>
+          <li>Sua postura mental</li>
+          <li>Seus hábitos e disciplina</li>
+          <li>A virtude que você pratica</li>
+          <li>Como você trata os outros</li>
+          <li>Seu foco e atenção</li>
+        </ul>
+      </div>
+
+      <div class="dichotomy-divider">
+        <span>versus</span>
+      </div>
+
+      <div class="dichotomy-col notYours">
+        <div class="dichotomy-col-title">✗ O QUE NÃO É SEU</div>
+        <ul class="dichotomy-list">
+          <li>A opinião alheia sobre você</li>
+          <li>O clima e a natureza</li>
+          <li>Seu corpo e saúde (em partes)</li>
+          <li>Sua reputação pública</li>
+          <li>Riqueza e posse material</li>
+          <li>O comportamento dos outros</li>
+          <li>Os resultados das suas ações</li>
+          <li>O passado e o futuro</li>
+          <li>Fortuna e azar</li>
+          <li>A morte — sua e alheia</li>
+          <li>Política e eventos externos</li>
+          <li>O tempo e a sorte</li>
+        </ul>
+      </div>
     </div>
-    <pre class="ascii-side">  (\\ /)
- ( . .)
- c(")(")
-  bunny</pre>
-    <div class="prog-bar" style="background:${d.accent}"></div>
-  `;
-  return s;
-}
+  </div>
+</div>
 
-function startProgress(bar){
-  progStart=Date.now();
-  function tick(){
-    elapsed=Date.now()-progStart;
-    const pct=Math.min((elapsed/DURATION)*100,100);
-    bar.style.width=pct+"%";
-    if(pct<100) prog=requestAnimationFrame(tick);
+<div class="divider"></div>
+
+<!-- PHILOSOPHERS -->
+<section class="philosophers" id="filosofos">
+  <p class="section-label reveal">02 — Os Mestres</p>
+  <h2 class="section-title reveal">Filósofos <em>Estoicos</em></h2>
+
+  <div class="philosophers-grid">
+
+    <div class="philosopher-card reveal">
+      <div class="philosopher-num">I</div>
+      <p class="philosopher-era">334–262 a.C. · Chipre → Atenas</p>
+      <h3 class="philosopher-name">Zênon de Cítio</h3>
+      <p class="philosopher-title">O Fundador do Estoicismo</p>
+      <p class="philosopher-bio">
+        Nascido em Cítio, Chipre, Zênon chegou a Atenas após naufragar e perder toda sua fortuna.
+        Começou a estudar filosofia com Crates, o Cínico, e depois fundou sua própria escola.
+        Ensinava caminhando pelo Pórtico Pintado (em grego: <em>Stoa Poikilê</em>), dando nome ao movimento.
+        Sua filosofia focava na virtude como o único bem verdadeiro e na razão como guia supremo da vida.
+      </p>
+      <p class="philosopher-quote">
+        "Temos dois ouvidos e uma boca para que possamos ouvir o dobro do que falamos."
+      </p>
+    </div>
+
+    <div class="philosopher-card reveal reveal-delay-1">
+      <div class="philosopher-num">II</div>
+      <p class="philosopher-era">99–55 a.C. · Síria → Roma</p>
+      <h3 class="philosopher-name">Cícero</h3>
+      <p class="philosopher-title">O Transmissor Latino</p>
+      <p class="philosopher-bio">
+        Embora não fosse estoico puro, Cícero foi o grande transmissor do pensamento grego para o mundo
+        romano. Através de obras como <em>De Finibus</em> e <em>Tusculanas</em>, preservou e popularizou
+        o pensamento estoico. Sua contribuição foi tornar a filosofia acessível em latim, garantindo
+        sua sobrevivência pelos séculos.
+      </p>
+      <p class="philosopher-quote">
+        "A vida não é nada sem a amizade."
+      </p>
+    </div>
+
+    <div class="philosopher-card reveal reveal-delay-2">
+      <div class="philosopher-num">III</div>
+      <p class="philosopher-era">4 a.C.–65 d.C. · Hispânia → Roma</p>
+      <h3 class="philosopher-name">Sêneca</h3>
+      <p class="philosopher-title">O Filósofo da Brevidade</p>
+      <p class="philosopher-bio">
+        Advisor do imperador Nero, senador, dramaturgo e o mais prolífico escritor estoico. Suas
+        cartas a Lucílio formam um dos maiores documentos filosóficos práticos já escritos. Viveu
+        as contradições do estoicismo — enorme riqueza pessoal, vida na corte — mas produziu textos
+        de beleza atemporal sobre morte, tempo e virtude.
+      </p>
+      <p class="philosopher-quote">
+        "Não é que tenhamos pouco tempo — desperdiçamos muito."
+      </p>
+    </div>
+
+    <div class="philosopher-card reveal">
+      <div class="philosopher-num">IV</div>
+      <p class="philosopher-era">50–135 d.C. · Frígia → Nicópolis</p>
+      <h3 class="philosopher-name">Epicteto</h3>
+      <p class="philosopher-title">O Escravo Livre</p>
+      <p class="philosopher-bio">
+        Ex-escravo que se tornou um dos maiores filósofos do mundo antigo. Epicteto não escreveu nada —
+        seus ensinamentos foram registrados pelo discípulo Arriano no <em>Enchiridion</em> e nas
+        <em>Diatribes</em>. Sua vida personificava o estoicismo: mesmo em escravidão, sua mente era
+        completamente livre. Definiu a dicotomia do controle com precisão cirúrgica.
+      </p>
+      <p class="philosopher-quote">
+        "Não é o que acontece com você, mas como você reage que importa."
+      </p>
+    </div>
+
+    <div class="philosopher-card reveal reveal-delay-1">
+      <div class="philosopher-num">V</div>
+      <p class="philosopher-era">121–180 d.C. · Roma</p>
+      <h3 class="philosopher-name">Marco Aurélio</h3>
+      <p class="philosopher-title">O Imperador Filósofo</p>
+      <p class="philosopher-bio">
+        O homem mais poderoso do mundo em seu tempo — e um dos seus mais devotados filósofos. Suas
+        <em>Meditações</em> nunca foram escritas para publicação: são notas pessoais, diário de
+        disciplina mental, escritas durante campanhas militares nas fronteiras do Império Romano.
+        Representam o estoicismo em seu ápice: prático, honesto, sem ilusões.
+      </p>
+      <p class="philosopher-quote">
+        "Você tem poder sobre sua mente, não sobre eventos externos. Perceba isso e você encontrará força."
+      </p>
+    </div>
+
+    <div class="philosopher-card reveal reveal-delay-2">
+      <div class="philosopher-num">VI</div>
+      <p class="philosopher-era">Séc. III a.C. · Cítio</p>
+      <h3 class="philosopher-name">Cleantes</h3>
+      <p class="philosopher-title">O Segundo Líder da Stoa</p>
+      <p class="philosopher-bio">
+        Sucedeu Zênon como líder da escola estoica. Trabalhou como carregador de água durante o dia
+        para pagar seus estudos à noite — exemplo vivo de disciplina estoica. Seu <em>Hino a Zeus</em>
+        é um dos poucos textos originais estoicos sobreviventes, mostrando a dimensão espiritual e
+        quase religiosa do pensamento estoico primitivo.
+      </p>
+      <p class="philosopher-quote">
+        "Conduza-me, Zeus, e tu, Destino, aonde me haveis destinado."
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- QUOTES -->
+<div class="quote-section" id="citacoes">
+  <div class="quote-section-inner">
+    <p class="section-label reveal">03 — Palavras Imortais</p>
+    <h2 class="section-title reveal">Citações <em>Essenciais</em></h2>
+
+    <div class="quotes-list">
+
+      <div class="quote-item reveal">
+        <div class="quote-num">01</div>
+        <div>
+          <p class="quote-text">"Perde teu tempo sem medo — pois você sempre terá o de hoje."</p>
+          <p class="quote-author">— Sêneca · Cartas a Lucílio</p>
+          <p class="quote-translation">Não se trata de pressa, mas de presença. Cada momento vivido conscientemente já é ganho.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">02</div>
+        <div>
+          <p class="quote-text">"A mente é tudo. Você se torna o que você pensa."</p>
+          <p class="quote-author">— Marco Aurélio · Meditações, Livro VI</p>
+          <p class="quote-translation">O mundo exterior é reflexo do interior. Disciplinar o pensamento é disciplinar a vida.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">03</div>
+        <div>
+          <p class="quote-text">"Faça cada ato da sua vida como se fosse o último."</p>
+          <p class="quote-author">— Marco Aurélio · Meditações, Livro II</p>
+          <p class="quote-translation">Presença total. Sem reservas. Sem procrastinação. O agora é o único campo de batalha real.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">04</div>
+        <div>
+          <p class="quote-text">"Primeiro diga a si mesmo o que você seria; depois faça o que tem que fazer."</p>
+          <p class="quote-author">— Epicteto · Diatribes</p>
+          <p class="quote-translation">Identidade antes de ação. Quem você decide ser determina tudo que você fará.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">05</div>
+        <div>
+          <p class="quote-text">"Não rezamos para que o mal não aconteça, mas para que não tenhamos medo."</p>
+          <p class="quote-author">— Epicteto · Enchiridion</p>
+          <p class="quote-translation">A proteção estoica não é ilusão de segurança — é a fortaleza interna que o medo não consegue derrubar.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">06</div>
+        <div>
+          <p class="quote-text">"Vita brevis, ars longa." — A vida é curta, a arte é longa.</p>
+          <p class="quote-author">— Hipócrates / adaptado por Sêneca</p>
+          <p class="quote-translation">Não é que não tenhamos tempo — é que desperdiçamos o que temos. O estoico usa o tempo como ouro.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">07</div>
+        <div>
+          <p class="quote-text">"Aceite os acontecimentos que o Destino tece para você."</p>
+          <p class="quote-author">— Marco Aurélio · Meditações, Livro IV</p>
+          <p class="quote-translation">Amor Fati — amar o destino. Não tolerar o que acontece, mas abraçá-lo como necessário e bom.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">08</div>
+        <div>
+          <p class="quote-text">"Perda não é nada além de transformação."</p>
+          <p class="quote-author">— Marco Aurélio · Meditações, Livro IX</p>
+          <p class="quote-translation">Nada desaparece do universo. Tudo se transforma. O luto estoico é entender que a forma mudou, não o ser.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">09</div>
+        <div>
+          <p class="quote-text">"Cara, não dá pra você controlar os fatores externos da sua vida."</p>
+          <p class="quote-author">— Estoicismo contemporâneo · SENAI, 2025</p>
+          <p class="quote-translation">A mesma verdade de Epicteto, transmitida na linguagem de hoje. A filosofia não envelhece — ela se adapta.</p>
+        </div>
+      </div>
+
+      <div class="quote-item reveal">
+        <div class="quote-num">10</div>
+        <div>
+          <p class="quote-text">"Aquele que teme a morte nunca fará nada digno de um vivo."</p>
+          <p class="quote-author">— Sêneca · Epístolas Morais</p>
+          <p class="quote-translation">A confrontação com a mortalidade é libertadora. Quando a morte perde seu poder de medo, a vida ganha poder de ação.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PRINCIPLES -->
+<section class="principles" id="principios">
+  <p class="section-label reveal">04 — Fundamentos</p>
+  <h2 class="section-title reveal">Os <em>Princípios</em> Centrais</h2>
+
+  <div class="principles-grid">
+
+    <div class="principle-item reveal">
+      <p class="principle-num">PRINCÍPIO 01</p>
+      <h3 class="principle-title">A Primazia da Razão</h3>
+      <p class="principle-body">
+        Para os estoicos, a razão (logos) é a faculdade divina que compartilhamos com o universo.
+        Tudo que é racional é também virtuoso, e tudo que é virtuoso é bom. A emoção não é negada —
+        mas deve ser guiada e compreendida pela razão. Raiva, medo e tristeza excessivos são erros
+        de julgamento, não respostas inevitáveis ao mundo.
+        <br><br>
+        O objetivo não é a frieza, mas a clareza. Um estoico pode amar profundamente, se alegrar
+        genuinamente e sofrer com dignidade — desde que a razão permaneça no comando.
+      </p>
+    </div>
+
+    <div class="principle-item reveal reveal-delay-1">
+      <p class="principle-num">PRINCÍPIO 02</p>
+      <h3 class="principle-title">Vivir segundo a Natureza</h3>
+      <p class="principle-body">
+        "Viver de acordo com a natureza" é o lema estoico mais famoso — e o mais mal interpretado.
+        Não significa viver como um animal ou rejeitar o progresso. Significa viver de acordo com
+        sua natureza racional, social e virtuosa.
+        <br><br>
+        Somos animais racionais e sociais. A natureza nos deu razão para discernir o bem, e instinto
+        social para viver em comunidade. Contradizer isso — agindo irracionalmente ou egoisticamente
+        — é violar nossa própria natureza.
+      </p>
+    </div>
+
+    <div class="principle-item reveal">
+      <p class="principle-num">PRINCÍPIO 03</p>
+      <h3 class="principle-title">Indiferença aos Externos</h3>
+      <p class="principle-body">
+        Riqueza, saúde, fama e prazer são "indiferentes" — não são bons nem ruins em si mesmos.
+        O que importa é como nos relacionamos com eles. Um estoico pode ser rico sem apego à riqueza.
+        Pode ser pobre sem ser destruído pela pobreza.
+        <br><br>
+        Os estoicos distinguiam entre "preferíveis" (coisas boas de se ter quando possível) e
+        "bens verdadeiros" (virtude). Confundir os dois é a raiz de todo sofrimento desnecessário.
+      </p>
+    </div>
+
+    <div class="principle-item reveal reveal-delay-1">
+      <p class="principle-num">PRINCÍPIO 04</p>
+      <h3 class="principle-title">A Cosmópolis Universal</h3>
+      <p class="principle-body">
+        Os estoicos foram os primeiros cosmopolitas. Marco Aurélio — imperador de Roma — se via
+        primeiro como cidadão do universo, depois como romano. O logos conecta todos os seres
+        racionais numa única cidade cósmica.
+        <br><br>
+        Isso tem implicações políticas radicais: escravos e imperadores compartilham a mesma
+        natureza racional. Epicteto, ex-escravo, ensinou reis e senadores. A hierarquia social
+        é acidental; a dignidade racional é universal.
+      </p>
+    </div>
+
+    <div class="principle-item reveal">
+      <p class="principle-num">PRINCÍPIO 05</p>
+      <h3 class="principle-title">O Presente como Lar</h3>
+      <p class="principle-body">
+        O estoicismo é radicalmente orientado ao presente. O passado é imutável — pertence ao
+        universo, não a você. O futuro é incerto — planejar é sábio, ansiar é tolice. O presente
+        é o único momento onde a ação e a virtude são possíveis.
+        <br><br>
+        Marco Aurélio repetia esse princípio incessantemente em suas Meditações. Não como mantra,
+        mas como correção de rota — lembrando a si mesmo de voltar ao agora sempre que a mente
+        divagava para o que foi ou o que será.
+      </p>
+    </div>
+
+    <div class="principle-item reveal reveal-delay-1">
+      <p class="principle-num">PRINCÍPIO 06</p>
+      <h3 class="principle-title">Simpatia com o Todo</h3>
+      <p class="principle-body">
+        O universo estoico é um organismo vivo, permeado pelo logos. Cada evento está conectado
+        a todos os outros numa rede de causas. Nada acontece isoladamente; tudo é parte de um
+        padrão maior.
+        <br><br>
+        Essa visão gera equanimidade diante das adversidades: se algo ruim acontece, é parte de
+        um padrão que transcende a compreensão individual. A resistência ao que é inevitável é
+        não apenas inútil — é irracional e, portanto, não-virtuosa.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- SCHOOLS TIMELINE -->
+<div class="schools" id="historia">
+  <div class="schools-inner">
+    <p class="section-label reveal">05 — História</p>
+    <h2 class="section-title reveal">A <em>Evolução</em> do Estoicismo</h2>
+
+    <div class="schools-timeline">
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <p class="timeline-date">c. 300 a.C. — ESTOICISMO ANTIGO</p>
+        <h3 class="timeline-title">A Stoa de Atenas</h3>
+        <p class="timeline-body">
+          Zênon funda a escola no Pórtico Pintado de Atenas. A escola se distingue do ceticismo
+          e do epicurismo pela afirmação da virtude como único bem. Cleantes e Crisipo consolidam
+          a doutrina nos séculos seguintes. Crisipo é considerado o "segundo fundador" pela
+          sistematização rigorosa da lógica estoica.
+        </p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <p class="timeline-date">c. 150 a.C. — ESTOICISMO MÉDIO</p>
+        <h3 class="timeline-title">A Chegada a Roma</h3>
+        <p class="timeline-body">
+          Panécio de Rodes e Posidônio adaptam o estoicismo ao contexto romano. A filosofia
+          se populariza entre a elite romana. Cícero, embora academicista, transmite amplamente
+          o pensamento estoico ao mundo latino. O foco se desloca da metafísica para a ética prática.
+        </p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <p class="timeline-date">Séc. I–II d.C. — ESTOICISMO TARDIO</p>
+        <h3 class="timeline-title">O Apogeu Romano</h3>
+        <p class="timeline-body">
+          Sêneca, Epicteto e Marco Aurélio representam o ápice do estoicismo prático. Menos
+          interessados em metafísica, focos em: como viver bem, como enfrentar a morte, como
+          exercer o poder com virtude. Marco Aurélio governa o maior império do mundo enquanto
+          escreve diários filosóficos pessoais — a síntese suprema de teoria e prática.
+        </p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <p class="timeline-date">Séc. III–XVII — INFLUÊNCIA DIFUSA</p>
+        <h3 class="timeline-title">Sobrevivência e Transmissão</h3>
+        <p class="timeline-body">
+          O estoicismo influencia profundamente o Neoplatonismo e o Cristianismo primitivo.
+          Conceitos como logos, providência e virtude são absorvidos pela teologia cristã.
+          Durante o Renascimento, o "Neostoicismo" de Justo Lípsio revive o interesse.
+          Descartes e Spinoza são devedores do pensamento estoico.
+        </p>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <p class="timeline-date">Séc. XX–XXI — RENASCIMENTO MODERNO</p>
+        <h3 class="timeline-title">O Estoicismo Hoje</h3>
+        <p class="timeline-body">
+          A Terapia Cognitivo-Comportamental (TCC) tem raízes explícitas no estoicismo —
+          Aaron Beck e Albert Ellis citam Epicteto como influência direta. O Estoicismo moderno
+          é o movimento filosófico de crescimento mais rápido do mundo. Autores como Ryan Holiday
+          vendem milhões de cópias. Times da NFL, CEOs do Vale do Silício e atletas de elite
+          estudam Marco Aurélio.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MEMENTO MORI -->
+<div class="memento">
+  <div class="memento-inner">
+    <h2 class="memento-title reveal">MEMENTO<br>MORI</h2>
+    <p class="memento-subtitle reveal">— Lembre-se de que você vai morrer —</p>
+
+    <div class="memento-text reveal">
+      <p>
+        Não como pessimismo, mas como o maior motivador que existe. O estoicismo confronta
+        a morte diretamente, sem metáforas, sem eufemismos. <em>Memento mori</em> era o lembrete
+        que escravos sussurravam ao ouvido de generais romanos durante seus triunfos: "Lembre-se
+        de que és mortal."
+      </p>
+      <p>
+        Para Marco Aurélio, pensar na morte todos os dias não era morbidez — era higiene mental.
+        A morte calibra o que importa. Quando você sabe que vai morrer, as pequenas ofensas,
+        as preocupações triviais e as ambições vazias perdem a gravidade que falsamente têm.
+      </p>
+      <p>
+        Sêneca escreveu sobre isso com uma clareza perturbadora: nós não temos pouco tempo —
+        desperdiçamos o que temos. Tratamos a vida como infinita e depois nos surpreendemos
+        quando ela termina. O estoico trata cada dia como um presente completo.
+      </p>
+      <p>
+        A prática do <em>memento mori</em> não é sobre tristeza. É sobre urgência. É a diferença
+        entre viver e existir. Entre agir e reagir. Entre escolher e ser levado. Quando a morte
+        é real para você, a vida se torna extraordinariamente vívida.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- VIRTUES -->
+<section class="virtues" id="virtudes">
+  <p class="section-label reveal">06 — As Quatro Pedras</p>
+  <h2 class="section-title reveal">As <em>Virtudes</em> Cardeais</h2>
+  <p style="max-width:600px; color:var(--stone); font-size:1.05rem; line-height:1.8; margin-bottom:0;" class="reveal">
+    Para os estoicos, existem exatamente quatro virtudes fundamentais. Não são ideais abstratos —
+    são capacidades práticas que se desenvolvem através da disciplina diária.
+  </p>
+
+  <div class="virtues-grid">
+
+    <div class="virtue-card reveal">
+      <span class="virtue-greek">σοφία</span>
+      <div class="virtue-name">SABEDORIA</div>
+      <p class="virtue-pt">SOPHIA · PRUDENTIA</p>
+      <p class="virtue-desc">
+        A capacidade de distinguir o que é bom, ruim e indiferente. De ver claramente através
+        das ilusões e tomar decisões alinhadas à virtude. A mãe de todas as virtudes.
+      </p>
+    </div>
+
+    <div class="virtue-card reveal reveal-delay-1">
+      <span class="virtue-greek">ἀνδρεία</span>
+      <div class="virtue-name">CORAGEM</div>
+      <p class="virtue-pt">ANDREIA · FORTITUDO</p>
+      <p class="virtue-desc">
+        Não apenas física, mas moral. A coragem de dizer a verdade, de fazer o certo quando é
+        difícil, de enfrentar a morte sem terror. O estoico age apesar do medo.
+      </p>
+    </div>
+
+    <div class="virtue-card reveal reveal-delay-2">
+      <span class="virtue-greek">δικαιοσύνη</span>
+      <div class="virtue-name">JUSTIÇA</div>
+      <p class="virtue-pt">DIKAIOSYNE · IUSTITIA</p>
+      <p class="virtue-desc">
+        Tratar os outros com equidade, honestidade e benevolência. Reconhecer a dignidade racional
+        universal. Para Marco Aurélio, era a mais importante das quatro virtudes.
+      </p>
+    </div>
+
+    <div class="virtue-card reveal reveal-delay-3">
+      <span class="virtue-greek">σωφροσύνη</span>
+      <div class="virtue-name">TEMPERANÇA</div>
+      <p class="virtue-pt">SOPHROSYNE · TEMPERANTIA</p>
+      <p class="virtue-desc">
+        Autodisciplina, moderação, autocontrole. Não negar os prazeres — mas não ser escravo
+        deles. Usar o corpo e os recursos como ferramentas, não como fins em si mesmos.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPARISON TABLE -->
+<div class="comparison">
+  <div class="comparison-inner">
+    <p class="section-label reveal">07 — Contexto</p>
+    <h2 class="section-title reveal">Estoicismo vs <em>Outras</em> Filosofias</h2>
+
+    <table class="comparison-table reveal">
+      <thead>
+        <tr>
+          <th>Tema</th>
+          <th>Estoicismo</th>
+          <th>Epicurismo</th>
+          <th>Cinismo</th>
+          <th>Platonismo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-category">Objetivo da vida</td>
+          <td class="td-stoic">Virtude e razão</td>
+          <td class="td-other">Prazer/ausência de dor</td>
+          <td class="td-other">Rejeição da convenção</td>
+          <td class="td-other">Conhecimento do Bem</td>
+        </tr>
+        <tr>
+          <td class="td-category">Emoções</td>
+          <td class="td-stoic">Guiadas pela razão</td>
+          <td class="td-other">Fonte de prazer e dor</td>
+          <td class="td-other">Irrelevantes</td>
+          <td class="td-other">Obstáculo ao conhecimento</td>
+        </tr>
+        <tr>
+          <td class="td-category">Sociedade</td>
+          <td class="td-stoic">Participação ativa</td>
+          <td class="td-other">Retirada para círculo íntimo</td>
+          <td class="td-other">Rejeição total</td>
+          <td class="td-other">Reforma pelo filósofo-rei</td>
+        </tr>
+        <tr>
+          <td class="td-category">Riqueza</td>
+          <td class="td-stoic">Indiferente — pode ser usada</td>
+          <td class="td-other">Pode ser boa se bem usada</td>
+          <td class="td-other">Rejeitada completamente</td>
+          <td class="td-other">Distração da filosofia</td>
+        </tr>
+        <tr>
+          <td class="td-category">Morte</td>
+          <td class="td-stoic">Natural — sem medo</td>
+          <td class="td-other">Fim do ser — sem medo</td>
+          <td class="td-other">Indiferente</td>
+          <td class="td-other">Liberação da alma</td>
+        </tr>
+        <tr>
+          <td class="td-category">Conhecimento</td>
+          <td class="td-stoic">Via sensação + razão</td>
+          <td class="td-other">Via sensação</td>
+          <td class="td-other">Prática, não teoria</td>
+          <td class="td-other">Via razão pura/formas</td>
+        </tr>
+        <tr>
+          <td class="td-category">Deus/Cosmos</td>
+          <td class="td-stoic">Logos imanente no cosmos</td>
+          <td class="td-other">Deuses distantes, irrelevantes</td>
+          <td class="td-other">Desconfiança do divino</td>
+          <td class="td-other">O Bem como transcendente</td>
+        </tr>
+        <tr>
+          <td class="td-category">Felicidade</td>
+          <td class="td-stoic">Eudaimonia via virtude</td>
+          <td class="td-other">Ataraxia via prazer calmo</td>
+          <td class="td-other">Autarquia radical</td>
+          <td class="td-other">Contemplação das Formas</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- PRACTICES -->
+<section class="practices" id="praticas">
+  <p class="section-label reveal">08 — Prática Diária</p>
+  <h2 class="section-title reveal">Como <em>Praticar</em> o Estoicismo</h2>
+
+  <div class="practices-list">
+
+    <div class="practice-item reveal">
+      <div>
+        <div class="practice-name">Journaling Matinal</div>
+        <div class="practice-latin">Meditatio Matutina</div>
+      </div>
+      <p class="practice-content">
+        Marco Aurélio fazia isso. Sêneca fazia isso. Você deve fazer isso. Antes de começar o dia,
+        escreva: o que você antecipa? Que dificuldades podem surgir? Como você quer responder?
+        Não é sobre prever — é sobre preparar a mente para agir virtualmente, independente do que aconteça.
+        Perguntas úteis: <em>O que está sob meu controle hoje? O que posso fazer de melhor?
+        Quem eu quero ser hoje?</em>
+      </p>
+    </div>
+
+    <div class="practice-item reveal">
+      <div>
+        <div class="practice-name">Premeditatio Malorum</div>
+        <div class="practice-latin">Visualização Negativa</div>
+      </div>
+      <p class="practice-content">
+        Imagine o pior cenário. Não para se paralisar — mas para se liberar do medo dele.
+        Se você já imaginou perder o emprego, perder um relacionamento, enfrentar a doença —
+        e percebeu que ainda assim sobreviveria — o medo perde seu poder sobre você.
+        Sêneca chamava isso de "praticar a pobreza": coma simples, durma no chão, use roupas velhas
+        por alguns dias. Perceba que você pode sobreviver muito mais do que imagina.
+      </p>
+    </div>
+
+    <div class="practice-item reveal">
+      <div>
+        <div class="practice-name">Exame Noturno</div>
+        <div class="practice-latin">Vespertina Interrogatio</div>
+      </div>
+      <p class="practice-content">
+        Sêneca descrevia sua prática: ao fim de cada dia, antes de dormir, três perguntas.
+        <em>O que fiz mal hoje?</em> — honestidade sem autoflage.
+        <em>O que fiz bem?</em> — reconhecimento sem arrogância.
+        <em>O que poderia ter sido melhor?</em> — aprendizado sem ruminação.
+        Não é julgamento — é calibração. O estoico é o próprio observador e o próprio avaliado.
+      </p>
+    </div>
+
+    <div class="practice-item reveal">
+      <div>
+        <div class="practice-name">Amor Fati</div>
+        <div class="practice-latin">Amar o Destino</div>
+      </div>
+      <p class="practice-content">
+        Não apenas aceitar o que acontece, mas amá-lo como necessário. Nietzsche popularizou o termo,
+        mas os estoicos viviam o conceito. Marco Aurélio: "Aceite os acontecimentos que o Destino
+        tece para você." Quando algo ruim acontece, o estoico não diz "por que eu?" — diz "para
+        que isso está acontecendo?" e encontra o uso virtuoso do obstáculo.
+        <em>O impedimento para a ação avança a ação. O que bloqueia o caminho torna-se o caminho.</em>
+      </p>
+    </div>
+
+    <div class="practice-item reveal">
+      <div>
+        <div class="practice-name">Pausa antes da Reação</div>
+        <div class="practice-latin">Epoché</div>
+      </div>
+      <p class="practice-content">
+        Entre o estímulo e a resposta, existe um espaço. Esse espaço é onde mora a liberdade humana.
+        O estoico treina a <em>epoché</em> — a suspensão do julgamento imediato. Quando algo irrita,
+        ameaça ou entristece: pausa. Respira. Pergunta: <em>isso está sob meu controle? Minha reação
+        será virtuosa?</em> Só então age. Essa prática simples transforma conflitos, decisões impulsivas
+        e espirais emocionais destrutivas.
+      </p>
+    </div>
+
+    <div class="practice-item reveal">
+      <div>
+        <div class="practice-name">Serviço à Humanidade</div>
+        <div class="practice-latin">Koinônía</div>
+      </div>
+      <p class="practice-content">
+        O estoicismo não é egoísta. Marco Aurélio lembrava a si mesmo constantemente de que foi
+        feito para os outros. O propósito da razão individual é servir ao logos coletivo. Prática
+        concreta: encontre alguém para ajudar hoje. Não por recompensa, não para parecer bom —
+        mas porque é a expressão natural de sua natureza racional e social. A virtude da justiça
+        demanda ação no mundo, não apenas contemplação interna.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- MODERN STOICISM -->
+<div class="modern" id="moderno">
+  <div class="modern-inner">
+    <p class="section-label reveal">09 — Relevância</p>
+    <h2 class="section-title reveal">O Estoicismo <em>Hoje</em></h2>
+
+    <div class="modern-grid">
+      <div>
+        <div class="modern-text reveal">
+          <p>
+            O estoicismo é o movimento filosófico de crescimento mais rápido do século XXI.
+            Não porque é moda — mas porque resolve problemas reais de pessoas reais num mundo
+            de sobrecarga informacional, instabilidade e ansiedade crônica.
+          </p>
+          <p>
+            A Terapia Cognitivo-Comportamental (TCC), a forma de psicoterapia mais estudada
+            e eficaz do mundo, tem raízes explicitamente estoicas. Aaron Beck e Albert Ellis
+            citavam Epicteto diretamente: "Os homens não são perturbados pelos eventos, mas
+            pelas opiniões que têm sobre eles." É exatamente o princípio central da TCC.
+          </p>
+          <p>
+            No mundo dos negócios, líderes como Tim Ferriss, Jeff Bezos e inúmeros CEOs do
+            Vale do Silício estudam Marco Aurélio e Sêneca como manuais de liderança.
+            Atletas de elite usam a visualização negativa e o controle emocional estoico
+            para performance sob pressão.
+          </p>
+          <p>
+            Times da NFL, academias militares e programas de saúde mental ao redor do mundo
+            incorporam práticas estoicas. A filosofia de 2.300 anos provando que a condição
+            humana não mudou — e que as soluções encontradas pelos gregos e romanos ainda funcionam.
+          </p>
+        </div>
+
+        <div class="modern-highlight reveal">
+          "Não é o estoicismo que se modernizou — é a modernidade que finalmente alcançou o estoicismo."
+        </div>
+      </div>
+
+      <div class="modern-stats reveal">
+        <div class="stat-item">
+          <span class="stat-num">2.3k</span>
+          <span class="stat-label">Anos de relevância</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">4M+</span>
+          <span class="stat-label">Cópias das Meditações vendidas</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">3</span>
+          <span class="stat-label">Filósofos principais</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">Aplicabilidade prática</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- READING LIST -->
+<section class="reading" id="leitura">
+  <p class="section-label reveal">10 — Biblioteca</p>
+  <h2 class="section-title reveal">Onde <em>Começar</em></h2>
+
+  <div class="books-grid">
+
+    <div class="book-item reveal">
+      <div class="book-cover"><span>MEDITAÇÕES</span></div>
+      <div class="book-title">Meditações</div>
+      <p class="book-author">MARCO AURÉLIO · c. 175 d.C.</p>
+      <p class="book-desc">
+        O ponto de entrada ideal. Escrito como diário pessoal, nunca para publicação,
+        é brutalmente honesto, prático e acessível. Leia um capítulo por dia.
+        Qualquer edição serve, mas a tradução de Gregory Hays (Penguin Classics) é a mais fluida.
+      </p>
+    </div>
+
+    <div class="book-item reveal reveal-delay-1">
+      <div class="book-cover"><span>ENCHIRIDION</span></div>
+      <div class="book-title">Enchiridion</div>
+      <p class="book-author">EPICTETO · c. 125 d.C.</p>
+      <p class="book-desc">
+        Pequeno, denso, poderoso. "Manual" do estoicismo prático. Epicteto, ex-escravo,
+        apresenta a dicotomia do controle com precisão cirúrgica. Leitura de uma tarde
+        que pode mudar décadas.
+      </p>
+    </div>
+
+    <div class="book-item reveal reveal-delay-2">
+      <div class="book-cover"><span>CARTAS</span></div>
+      <div class="book-title">Cartas a Lucílio</div>
+      <p class="book-author">SÊNECA · c. 65 d.C.</p>
+      <p class="book-desc">
+        124 cartas sobre tudo: morte, amizade, tempo, riqueza, filosofia. A voz mais calorosa
+        e literária do estoicismo. Sêneca escreve como se estivesse numa conversa — e está,
+        com você, através de 2.000 anos.
+      </p>
+    </div>
+
+    <div class="book-item reveal">
+      <div class="book-cover"><span>OBSTACLE</span></div>
+      <div class="book-title">The Obstacle is the Way</div>
+      <p class="book-author">RYAN HOLIDAY · 2014</p>
+      <p class="book-desc">
+        A melhor introdução moderna ao estoicismo. Holiday traduz os princípios estoicos
+        para histórias de atletas, líderes e guerreiros contemporâneos. Ponto de entrada
+        para quem prefere começar pelo moderno.
+      </p>
+    </div>
+
+    <div class="book-item reveal reveal-delay-1">
+      <div class="book-cover"><span>STILLNESS</span></div>
+      <div class="book-title">Stillness is the Key</div>
+      <p class="book-author">RYAN HOLIDAY · 2019</p>
+      <p class="book-desc">
+        Sobre a quietude interior como base de toda excelência. Holiday cruza estoicismo,
+        budismo e filosofia oriental para construir uma prática de tranquilidade que não
+        é passividade — é fundação.
+      </p>
+    </div>
+
+    <div class="book-item reveal reveal-delay-2">
+      <div class="book-cover"><span>GUIDE</span></div>
+      <div class="book-title">A Guide to the Good Life</div>
+      <p class="book-author">WILLIAM B. IRVINE · 2008</p>
+      <p class="book-desc">
+        O melhor livro acadêmico-prático sobre estoicismo moderno. Irvine é filósofo, escreve
+        com clareza e apresenta as práticas estoicas num formato sistemático e aplicável.
+        Excelente para quem quer profundidade sem aridez.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHECKLIST -->
+<div class="checklist-section">
+  <div class="checklist-inner">
+    <p class="section-label reveal">11 — Autoavaliação</p>
+    <h2 class="section-title reveal">Você está <em>praticando</em>?</h2>
+    <p style="color:var(--stone); font-size:1rem; line-height:1.7; margin-bottom:0;" class="reveal">
+      Clique nos itens para marcar seu progresso diário.
+    </p>
+
+    <div class="checklist-grid">
+
+      <div class="reveal">
+        <h3 class="checklist-col-title">Práticas da Manhã</h3>
+        <ul class="checklist" id="morningList">
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Escrevi no diário antes de começar o dia</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Identifiquei o que está e o que não está sob meu controle hoje</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Fiz a premeditatio malorum — imaginei desafios e como responderei virtuosamente</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Defini minha intenção do dia com base em quem quero ser, não no que quero conseguir</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Li pelo menos uma página de um texto estoico</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Practiquei a quietude por pelo menos 5 minutos</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="reveal reveal-delay-2">
+        <h3 class="checklist-col-title">Práticas da Noite</h3>
+        <ul class="checklist" id="eveningList">
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Fiz o exame noturno — o que fiz mal, bem, e o que poderia melhorar</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Pratiquei a epoché hoje — pausei antes de reagir pelo menos uma vez</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Agi com justiça — tratei alguém com equidade que poderia ter ignorado</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Não me deixei levar pela opinião alheia — positiva ou negativa</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Lembrei ao menos uma vez do memento mori — e isso me ajudou a priorizar</span>
+          </li>
+          <li onclick="toggleCheck(this)">
+            <div class="check-box"></div>
+            <span>Fui grato por algo que poderia ter perdido — praticando o amor fati</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div class="final">
+  <div class="final-bg"></div>
+  <div class="final-inner">
+    <h2 class="final-title reveal">
+      CONTROLA
+      <span>O QUE É TEU.</span>
+      O RESTO,
+      <span>SOLTA.</span>
+    </h2>
+
+    <p class="final-text reveal">
+      Essa é a promessa do estoicismo. Não uma vida sem dor, sem perda, sem dificuldade.
+      Mas uma vida com dignidade, clareza e virtude — independente do que o destino traz.
+      Você já tem tudo que precisa. Sempre teve.
+    </p>
+
+    <div class="final-mantra reveal">
+      ✦ &nbsp; EUDAIMONIA · LOGOS · VIRTUS &nbsp; ✦
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">STOICUS</div>
+  <p class="footer-text">
+    Estoicismo — Séc. III a.C. · Atenas, Grécia<br>
+    "Você tem poder sobre sua mente, não sobre eventos externos."
+  </p>
+  <p class="footer-text">
+    LOGOS · VIRTUS · RATIO
+  </p>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+    }, 80);
+  });
+
+  document.querySelectorAll('a, li, .philosopher-card, .principle-item, .book-item, .practice-item').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      cursorRing.style.width = '60px';
+      cursorRing.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      cursorRing.style.width = '40px';
+      cursorRing.style.height = '40px';
+    });
+  });
+
+  // SCROLL INDICATOR
+  window.addEventListener('scroll', () => {
+    const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('scrollIndicator').style.width = scrolled + '%';
+  });
+
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // CHECKLIST
+  function toggleCheck(item) {
+    item.classList.toggle('checked');
   }
-  prog=requestAnimationFrame(tick);
-}
 
-function spawnBubbles(slide,d){
-  let count=0;
-  function drop(){
-    if(count>22)return;
-    const el=document.createElement("div");
-    el.className="bubble";
-    el.textContent=d.emojis[Math.floor(Math.random()*d.emojis.length)];
-    el.style.left=(5+Math.random()*88)+"%";
-    el.style.bottom=(20+Math.random()*60)+"px";
-    const dur=3.2+Math.random()*2.8;
-    el.style.animationDuration=dur+"s";
-    el.style.fontSize=(16+Math.random()*16)+"px";
-    slide.appendChild(el);
-    el.addEventListener("animationend",()=>el.remove());
-    count++;
-    bubTimer=setTimeout(drop,320+Math.random()*400);
+  // FLOATING QUOTES
+  const floatingQuotes = [
+    { text: "Você tem poder sobre sua mente, não sobre eventos externos.", cite: "Marco Aurélio" },
+    { text: "Não é o que acontece com você, mas como você reage que importa.", cite: "Epicteto" },
+    { text: "Temos dois ouvidos e uma boca para ouvir o dobro do que falamos.", cite: "Zênon" },
+    { text: "Não é que tenhamos pouco tempo — desperdiçamos muito.", cite: "Sêneca" },
+    { text: "Faça cada ato da sua vida como se fosse o último.", cite: "Marco Aurélio" },
+    { text: "O impedimento para a ação avança a ação.", cite: "Marco Aurélio" },
+    { text: "Aceite o que não pode ser mudado com graça.", cite: "Epicteto" },
+    { text: "A virtude é a única coisa verdadeiramente boa.", cite: "Zênon de Cítio" },
+  ];
+
+  let quoteIndex = 0;
+  const floatingEl = document.getElementById('floatingQuote');
+  const floatingText = document.getElementById('floatingText');
+  const floatingCite = document.getElementById('floatingCite');
+
+  function showFloatingQuote() {
+    const q = floatingQuotes[quoteIndex % floatingQuotes.length];
+    floatingText.textContent = q.text;
+    floatingCite.textContent = '— ' + q.cite;
+    floatingEl.classList.add('show');
+    setTimeout(() => floatingEl.classList.remove('show'), 4000);
+    quoteIndex++;
   }
-  drop();
-}
 
-function goTo(newIdx,name){
-  if(prog) cancelAnimationFrame(prog);
-  if(timer) clearTimeout(timer);
-  if(bubTimer) clearTimeout(bubTimer);
+  setTimeout(showFloatingQuote, 5000);
+  setInterval(showFloatingQuote, 12000);
 
-  const prev=stage.querySelector(".slide.active");
-  const d=DATA[newIdx];
-  const slide=buildSlide(d,name);
-  stage.appendChild(slide);
-
-  if(prev){
-    prev.classList.remove("active");
-    prev.classList.add("prev");
-    setTimeout(()=>prev.remove(),600);
+  // SMOOTH MARQUEE PAUSE ON HOVER
+  const marquee = document.querySelector('.wide-text-inner');
+  if (marquee) {
+    marquee.parentElement.addEventListener('mouseenter', () => {
+      marquee.style.animationPlayState = 'paused';
+    });
+    marquee.parentElement.addEventListener('mouseleave', () => {
+      marquee.style.animationPlayState = 'running';
+    });
   }
-  slide.classList.add("active","slide-enter");
-  setTimeout(()=>slide.classList.remove("slide-enter"),600);
-
-  const bar=slide.querySelector(".prog-bar");
-  startProgress(bar);
-  spawnBubbles(slide,d);
-
-  timer=setTimeout(()=>{
-    idx=(newIdx+1)%DATA.length;
-    goTo(idx,name);
-  },DURATION);
-}
-
-function launch(){
-  userName=nameInput.value.trim()||"Visitante";
-  document.getElementById("modal-wrap").style.display="none";
-  stage.style.display="block";
-  goTo(0,userName);
-}
-
-enterBtn.addEventListener("click",launch);
-nameInput.addEventListener("keydown",e=>{ if(e.key==="Enter") launch(); });
 </script>
+
+</body>
+</html>
